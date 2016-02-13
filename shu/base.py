@@ -76,9 +76,12 @@ class BookScraper:
         output_file = self.working_dir / 'links.html'
         with output_file.open('w') as fp:
             fp.write('<meta charset="utf-8"><ul>\n')
+            import ipdb; ipdb.set_trace()
+
             for url, filename in self._files.items():
-                doc = get_doc_from_file(self.working_dir / filename)
-                title = doc('title').text()
+                path = str(self.working_dir / filename)
+                tree = html5lib.parse(open(path, 'rb'), namespaceHTMLElements=False)
+                title = tree.find('.//title').text
                 html = """<li>
                     <a href="%s">%s</a> - %s - %s
                 </li>""" % (filename, url, title, filename)
