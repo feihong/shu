@@ -14,10 +14,16 @@ class MyBookScraper(BookScraper):
 
     def get_content_tree(self, doc):
         root = Node('root')
-        
+
         table = doc('table[cellpadding="7"]')
         for td in table('td'):
-            print(td.text_content())
+            if not td.getchildren():
+                continue
+            if td.find('strong') is not None:
+                print('Scroll: ' + td.text_content())
+            else:
+                print('- ' + td.text_content())
+
 
 if __name__ == '__main__':
     scraper = MyBookScraper('books/xunqinji')

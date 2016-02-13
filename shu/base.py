@@ -121,6 +121,9 @@ class Node:
         self.content = None
         self.children = []
 
+    def append(self, node):
+        self.children.append(node)
+
     def __str__(self):
         res = self.title
         if self.children:
