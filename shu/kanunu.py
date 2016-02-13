@@ -1,12 +1,11 @@
 from urlpath import URL
-from shu import BookScraper, Node, print_node
+from .base import BookScraper, Node
 
 
-class MyBookScraper(BookScraper):
-    index_url = 'http://www.kanunu8.com/book3/6633/index.html'
-    title = '球状闪电'
-    author = '刘慈欣'
-    base_url = URL(index_url).parent
+class KanunuScraper(BookScraper):
+    def __init__(self, working_dir):
+        super(KanunuScraper, self).__init__(working_dir)
+        self.base_url = URL(self.index_url).parent
 
     def get_title_and_links(self, doc):
         anchors = doc("table[cellpadding='8'] a")
@@ -27,9 +26,3 @@ class MyBookScraper(BookScraper):
             chapter.content = doc('p')[0].text_content()
             root.append(chapter)
         return root
-
-
-if __name__ == '__main__':
-    scraper = MyBookScraper('books/qiu zhuang shan dian')
-    scraper.download()
-    scraper.build_ebook('qiu zhuang shan dian.txt')
