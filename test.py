@@ -1,5 +1,5 @@
 from urlpath import URL
-from shu import BookScraper, Node
+from shu import BookScraper, Node, print_node
 
 class MyBookScraper(BookScraper):
     index_url = 'http://www.kanunu8.com/wuxia/201103/2336.html'
@@ -13,16 +13,21 @@ class MyBookScraper(BookScraper):
             yield str(root / anchor.get('href'))
 
     def get_content_tree(self, doc):
-        root = Node('root')
+        root = Node(title='root')
 
         table = doc('table[cellpadding="7"]')
         for td in table('td'):
             if not td.getchildren():
                 continue
             if td.find('strong') is not None:
-                print('Scroll: ' + td.text_content())
+                root.append(Node(title=td.text_content()))
             else:
-                print('- ' + td.text_content())
+                scroll = root.lastchild.title
+                title = '%s: %s' % (scroll, td.text_content())
+                chapter = Node(title=title)
+                root.lastchild.append(chapter)
+
+        print_node(root)
 
 
 if __name__ == '__main__':

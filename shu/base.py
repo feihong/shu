@@ -124,8 +124,14 @@ class Node:
     def append(self, node):
         self.children.append(node)
 
+    @property
+    def lastchild(self):
+        return self.children[-1]
+
     def __str__(self):
         res = self.title
+        if self.content:
+            res += ' (%d characters)' % len(self.content)
         if self.children:
             res += ' (%d children)' % len(self.children)
         return res
