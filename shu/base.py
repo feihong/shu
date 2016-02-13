@@ -21,14 +21,14 @@ class BookScraper:
         self._files = OrderedDict()
 
     def download(self):
-        doc = self.get_index_page()
+        doc = self.get_index_doc()
 
         for link in self.get_links(doc):
             self.download_page(link)
 
         self.write_links_page()
 
-    def get_page(self, url):
+    def get_doc(self, url):
         """
         Given a URL, get the cached contents of the page converted to a PyQuery
         object.
@@ -36,7 +36,7 @@ class BookScraper:
         path = self.working_dir / self._files[url]
         return get_doc_from_file(path)
 
-    def get_index_page(self):
+    def get_index_doc(self):
         """
         Download the index page if necessary and return it as a PyQuery object.
         """
@@ -87,7 +87,7 @@ class BookScraper:
     def build_ebook(self, output_file):
         if not self._files:
             self._files = self.import_links_page()
-        tree = self.get_content_tree()
+        tree = self.get_content_tree(self.get_index_doc())
         # write tree to file
 
     def import_links_page(self):
@@ -97,7 +97,10 @@ class BookScraper:
             res[anchor.text_content()] = anchor.get('href')
         return res
 
-    def get_content_tree(self):
+    def get_content_tree(self, doc):
+        """
+        Given the index document as a PyQuery object, return content tree.
+        """
         raise NotImplementedError
 
 
