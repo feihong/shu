@@ -33,7 +33,7 @@ class BookScraper:
         Given a URL, get the cached contents of the page converted to a PyQuery
         object.
         """
-        path = self.working_dir / self._files[url]
+        path = self.working_dir / self._files[str(url)]
         return get_doc_from_file(path)
 
     def get_index_doc(self):

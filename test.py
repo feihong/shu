@@ -5,12 +5,12 @@ class MyBookScraper(BookScraper):
     index_url = 'http://www.kanunu8.com/wuxia/201103/2336.html'
     title = '寻秦记'
     author = '黄易'
+    base_url = URL(index_url).parent
 
     def get_links(self, doc):
-        root = URL(self.index_url).parent
         anchors = doc("td a[href ^= '2336']")
         for anchor in anchors:
-            yield str(root / anchor.get('href'))
+            yield str(self.base_url / anchor.get('href'))
 
     def get_content_tree(self, doc):
         root = Node(title='root')
@@ -25,6 +25,10 @@ class MyBookScraper(BookScraper):
                 scroll = root.lastchild.title
                 title = '%s: %s' % (scroll, td.text_content())
                 chapter = Node(title=title)
+
+                url = self.base_url / td.find('a').get('href')
+                doc = self.get_doc(url)
+                
                 root.lastchild.append(chapter)
 
         print_node(root)
