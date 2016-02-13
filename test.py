@@ -12,10 +12,10 @@ class MyBookScraper(BookScraper):
         for anchor in anchors:
             yield str(root / anchor.get('href'))
 
-    def get_content_tree(self, doc):
-        pass
+    # def get_content_tree(self, doc):
+    #     pass
 
 if __name__ == '__main__':
     scraper = MyBookScraper('books/xunqinji')
-    scraper.download()
-    # scraper.build_ebook('xunqinji.txt')
+    # scraper.download()
+    scraper.build_ebook('xunqinji.txt')

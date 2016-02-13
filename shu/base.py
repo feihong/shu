@@ -78,20 +78,27 @@ class BookScraper:
                 path = str(self.working_dir / filename)
                 tree = lxml.html.parse(path)
                 title = tree.find('//title').text_content()
-                fp.write("""
-                <li>
+                html = """<li>
                     <a href="%s">%s</a> - %s - %s
-                </li>\n""" % (filename, url, title, filename))
+                </li>""" % (filename, url, title, filename)
+                fp.write(html.strip() + '\n')
             fp.write('</ul>')
 
-    def build_ebook(self):
+    def build_ebook(self, output_file):
         if not self._files:
             self._files = self.import_links_page()
         tree = self.get_content_tree()
         # write tree to file
 
     def import_links_page(self):
-        pass
+        doc = get_doc_from_file(self.working_dir / 'links.html')
+        res = OrderedDict()
+        for anchor in doc('a'):
+            res[anchor.text_content()] = anchor.get('href')
+        return res
+
+    def get_content_tree(self):
+        raise NotImplementedError
 
 
 def get_doc_from_file(path):
@@ -99,7 +106,20 @@ def get_doc_from_file(path):
     Given the path to an HTML file, return a PyQuery object that provides an
     interface to its DOM.
     """
-    if path is Path:
+    if isinstance(path, Path):
         path = str(path)
     tree = lxml.html.parse(path)
     return PyQuery(tree.getroot())
+
+
+class Node:
+    def __init__(self, title):
+        self.title = title
+        self.content = None
+        self.children = []
+
+    def __str__(self):
+        res = self.title
+        if self.children:
+            res += ' (%d children)' % len(self.children)
+        return res

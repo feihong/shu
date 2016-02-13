@@ -1,1 +1,1 @@
-from .base import BookScraper
+from .base import BookScraper, Node
