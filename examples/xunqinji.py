@@ -1,6 +1,7 @@
 from urlpath import URL
 from shu import BookScraper, Node, print_node
 
+
 class MyBookScraper(BookScraper):
     index_url = 'http://www.kanunu8.com/wuxia/201103/2336.html'
     title = '寻秦记'
@@ -15,10 +16,14 @@ class MyBookScraper(BookScraper):
     def get_content_tree(self, doc):
         root = Node(title='root')
 
+        # The table that contains the scroll and chapter titles.
         table = doc('table[cellpadding="7"]')
+
         for td in table('td'):
+            # Ignore empty cells.
             if not td.getchildren():
                 continue
+
             if td.find('strong') is not None:
                 root.append(Node(title=td.text_content()))
             else:
