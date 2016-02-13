@@ -5,6 +5,7 @@ import requests
 import lxml.html
 import html5lib
 from pyquery import PyQuery
+from .writer import PagedFileWriter
 
 
 class BookScraper:
@@ -86,13 +87,18 @@ class BookScraper:
                 fp.write(html.strip() + '\n')
             fp.write('</ul>')
 
-    def build_ebook(self, output_file):
+    def build_ebook(self, output_file, add_page_markers=False):
         if not self._files:
             self._files = self.import_links_page()
         root_node = self.get_content_tree(self.get_index_doc())
 
-        # Write tree to file
-        with open(output_file, 'w') as fp:
+        if add_page_markers:
+            fp = PagedFileWriter(output_file)
+        else:
+            fp = open(output_file, 'w')
+
+        # Write tree to file.
+        with fp:
             fp.write('# %s\n\n' % self.title)
             fp.write('作者：%s\n\n' % self.author)
 
@@ -105,7 +111,8 @@ class BookScraper:
                     hashes = '#' * level
                     fp.write('%s %s\n\n' % (hashes, node.title))
                     if node.content:
-                        fp.write(node.content + '\n\n')
+                        # Strip any leading and trailing newlines.
+                        fp.write(node.content.strip('\n') + '\n\n')
 
                 for child in reversed(node.children):
                     stack.append((level+1, child))
