@@ -113,7 +113,12 @@ def get_doc_from_file(path):
     """
     if isinstance(path, Path):
         path = str(path)
+
+    # First get an xml.etree object.
     tree = html5lib.parse(open(path, 'rb'), namespaceHTMLElements=False)
+
+    # Convert to lxml.html object so that we can take advantage of the
+    # .text_content() method, which captures whitespace.
     tree2 = lxml.html.fromstring(xml.etree.ElementTree.tostring(tree))
     return PyQuery(tree2)
 
