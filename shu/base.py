@@ -77,9 +77,8 @@ class BookScraper:
         with output_file.open('w') as fp:
             fp.write('<meta charset="utf-8"><ul>\n')
             for url, filename in self._files.items():
-                path = str(self.working_dir / filename)
-                tree = lxml.html.parse(path)
-                title = tree.find('//title').text_content()
+                doc = get_doc_from_file(self.working_dir / filename)
+                title = doc('title').text()
                 html = """<li>
                     <a href="%s">%s</a> - %s - %s
                 </li>""" % (filename, url, title, filename)
