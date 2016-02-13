@@ -1,7 +1,9 @@
+import xml.etree
 from collections import OrderedDict
 from pathlib import Path
 import requests
 import lxml.html
+import html5lib
 from pyquery import PyQuery
 
 
@@ -111,8 +113,9 @@ def get_doc_from_file(path):
     """
     if isinstance(path, Path):
         path = str(path)
-    tree = lxml.html.parse(path)
-    return PyQuery(tree.getroot())
+    tree = html5lib.parse(open(path, 'rb'), namespaceHTMLElements=False)
+    tree2 = lxml.html.fromstring(xml.etree.ElementTree.tostring(tree))
+    return PyQuery(tree2)
 
 
 class Node:

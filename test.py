@@ -28,7 +28,8 @@ class MyBookScraper(BookScraper):
 
                 url = self.base_url / td.find('a').get('href')
                 doc = self.get_doc(url)
-                
+                chapter.content = doc('p')[0].text_content().strip()
+
                 root.lastchild.append(chapter)
 
         print_node(root)

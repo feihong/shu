@@ -1,3 +1,5 @@
+html5lib
+lxml
 pyquery
 requests
 urlpath
