@@ -32,10 +32,10 @@ class MyBookScraper(BookScraper):
 
                 root.lastchild.append(chapter)
 
-        print_node(root)
+        return root
 
 
 if __name__ == '__main__':
     scraper = MyBookScraper('books/xunqinji')
-    # scraper.download()
+    scraper.download()
     scraper.build_ebook('xunqinji.txt')

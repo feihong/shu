@@ -1,5 +1,5 @@
 import xml.etree
-from collections import OrderedDict
+from collections import OrderedDict, deque
 from pathlib import Path
 import requests
 import lxml.html
@@ -89,8 +89,27 @@ class BookScraper:
     def build_ebook(self, output_file):
         if not self._files:
             self._files = self.import_links_page()
-        tree = self.get_content_tree(self.get_index_doc())
-        # write tree to file
+        root_node = self.get_content_tree(self.get_index_doc())
+
+        # Write tree to file
+        with open(output_file, 'w') as fp:
+            fp.write('# %s\n\n' % self.title)
+            fp.write('作者：%s\n\n' % self.author)
+
+            stack = deque()
+            stack.append((1, root_node))
+
+            while stack:
+                level, node = stack.pop()
+                if node.title != 'root':
+                    hashes = '#' * level
+                    fp.write('%s %s\n\n' % (hashes, node.title))
+                    if node.content:
+                        fp.write(node.content + '\n\n')
+
+                for child in reversed(node.children):
+                    stack.append((level+1, child))
+
 
     def import_links_page(self):
         doc = get_doc_from_file(self.working_dir / 'links.html')
