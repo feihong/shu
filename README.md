@@ -10,3 +10,7 @@ mkvirtualenv --python=`which python3` shu
 pip install -r requirements.txt
 python setup.py develop
 ```
+
+## Instructions
+
+To make an ebook, look at the programs in the example directory and copy the one most similar to what you want to do. Use the [Firefinder add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/firefinder-for-firebug/) to preview what elements will get picked up your CSS selectors.
