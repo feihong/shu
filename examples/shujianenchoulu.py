@@ -8,6 +8,7 @@ class MyBookScraper(KanunuScraper):
 
 
 if __name__ == '__main__':
-    scraper = MyBookScraper('books/shu jian en chou lu')
+    # Has 40 chapters.
+    scraper = MyBookScraper('cache')
     scraper.download()
     scraper.build_ebook('shu jian en chou lu.txt', add_page_markers=True)

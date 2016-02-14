@@ -8,6 +8,7 @@ class MyBookScraper(KanunuScraper):
 
 
 if __name__ == '__main__':
-    scraper = MyBookScraper('books/gui chui deng')
+    # Has 240 chapters.
+    scraper = MyBookScraper('cache')
     scraper.download()
     scraper.build_ebook('gui chui deng.txt')

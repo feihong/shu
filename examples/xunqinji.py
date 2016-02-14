@@ -36,6 +36,7 @@ class MyBookScraper(KanunuScraper):
 
 
 if __name__ == '__main__':
-    scraper = MyBookScraper('books/xunqinji')
+    # Quite long, has 290 chapters.
+    scraper = MyBookScraper('cache')
     scraper.download()
     scraper.build_ebook('xun qin ji.txt', add_page_markers=True)

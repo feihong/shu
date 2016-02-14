@@ -8,6 +8,7 @@ class MyBookScraper(KanunuScraper):
 
 
 if __name__ == '__main__':
-    scraper = MyBookScraper('books/huangjin shidai')
-    # scraper.download()
+    # Very short, has 11 chapters.
+    scraper = MyBookScraper()
+    scraper.download()
     scraper.build_ebook('huangjin shidai.txt', add_page_markers=True)

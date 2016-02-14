@@ -6,8 +6,8 @@ class KanunuScraper(BookScraper):
     # CSS selector for table that contains all the links.
     index_table_selector = 'table[cellpadding="8"] a'
 
-    def __init__(self, working_dir):
-        super(KanunuScraper, self).__init__(working_dir)
+    def __init__(self, cache_root_dir=None):
+        super(KanunuScraper, self).__init__(cache_root_dir)
         self.base_url = URL(self.index_url).parent
 
     def get_title_and_links(self, doc):

@@ -13,10 +13,12 @@ class BookScraper:
     author = 'AUTHOR'
     index_url = ''
 
-    def __init__(self, working_dir):
-        self.working_dir = Path(working_dir)
-        if not self.working_dir.exists():
-            self.working_dir.mkdir(parents=True)
+    def __init__(self, cache_root_dir=None):
+        if cache_root_dir is None:
+            cache_root_dir = get_default_cache_root_dir()
+        self._cache_dir = Path(cache_root_dir) / self.title
+        if not self._cache_dir.exists():
+            self._cache_dir.mkdir()
 
         self._session = requests.Session()
 
@@ -33,17 +35,17 @@ class BookScraper:
 
     def get_doc(self, url):
         """
-        Given a URL, get the cached contents of the page converted to a PyQuery
+        Given a URL, get the cached contents of the page converted as a PyQuery
         object.
         """
-        path = self.working_dir / self._files[str(url)]
+        path = self._cache_dir / self._files[str(url)]
         return get_doc_from_file(path)
 
     def get_index_doc(self):
         """
         Download the index page if necessary and return it as a PyQuery object.
         """
-        index_file = self.working_dir / 'index.html'
+        index_file = self._cache_dir / 'index.html'
         if not index_file.exists():
             self.download_page(self.index_url, 'index.html')
         return get_doc_from_file(str(index_file))
@@ -66,19 +68,19 @@ class BookScraper:
         if filename is None:
             filename = '%d.html' % len(self._files)
 
-        print('Downloading %s to %s' % (url, filename))
-
-        (self.working_dir / filename).write_bytes(response.content)
+        output_path = self._cache_dir / filename
+        print('Downloading %s to %s' % (url, output_path))
+        output_path.write_bytes(response.content)
 
         if not filename in self._files:
             self._files[url] = filename
 
     def write_links_page(self):
-        output_file = self.working_dir / 'links.html'
+        output_file = self._cache_dir / 'links.html'
         with output_file.open('w') as fp:
             fp.write('<meta charset="utf-8"><ul>\n')
             for url, filename in self._files.items():
-                path = str(self.working_dir / filename)
+                path = str(self._cache_dir / filename)
                 tree = html5lib.parse(open(path, 'rb'), namespaceHTMLElements=False)
                 title = tree.find('.//title').text
                 html = """<li>
@@ -119,7 +121,7 @@ class BookScraper:
 
 
     def import_links_page(self):
-        doc = get_doc_from_file(self.working_dir / 'links.html')
+        doc = get_doc_from_file(self._cache_dir / 'links.html')
         res = OrderedDict()
         for anchor in doc('a'):
             res[anchor.text_content()] = anchor.get('href')
@@ -147,6 +149,15 @@ def get_doc_from_file(path):
     # .text_content() method, which captures whitespace.
     tree2 = lxml.html.fromstring(xml.etree.ElementTree.tostring(tree))
     return PyQuery(tree2)
+
+
+def get_default_cache_root_dir():
+    import os.path as op
+    import tempfile
+    if op.exists('/tmp'):
+        return Path('/tmp')
+    else:
+        return Path(tempfile.gettempdir())
 
 
 class Node:

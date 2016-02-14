@@ -8,6 +8,7 @@ class MyBookScraper(KanunuScraper):
 
 
 if __name__ == '__main__':
-    scraper = MyBookScraper('books/qiu zhuang shan dian')
+    # Has 32 chapters.
+    scraper = MyBookScraper()
     scraper.download()
     scraper.build_ebook('qiu zhuang shan dian.txt', add_page_markers=True)
