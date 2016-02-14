@@ -10,4 +10,4 @@ class MyBookScraper(KanunuScraper):
 if __name__ == '__main__':
     scraper = MyBookScraper('books/shu jian en chou lu')
     scraper.download()
-    scraper.build_ebook('shu jian en chou lu.txt')
+    scraper.build_ebook('shu jian en chou lu.txt', add_page_markers=True)
