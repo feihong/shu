@@ -2,6 +2,21 @@ from urlpath import URL
 from .base import BookScraper, Node
 
 
+def make_ebook(index_url, title, author, output_file, add_page_markers=True):
+    # Because of how scoping works in Python, you need to use different variable
+    # names. See bit.ly/1Th5SRl.
+    args = (index_url, title, author)
+
+    class MyBookScraper(KanunuScraper):
+        index_url = args[0]
+        title = args[1]
+        author = args[2]
+
+    scraper = MyBookScraper()
+    scraper.download()
+    scraper.build_ebook(output_file, add_page_markers=add_page_markers)
+
+
 class KanunuScraper(BookScraper):
     # CSS selector for table that contains all the links.
     index_table_selector = 'table[cellpadding="8"] a'
