@@ -11,6 +11,7 @@ class PagedFileWriter:
         self.page = 1
 
     def write(self, text):
+        # Never page break on headers.
         if text.startswith('#'):
             self.fp.write(text)
             return
