@@ -25,11 +25,14 @@ class BookScraper:
         # Map of URLs to file names.
         self._files = OrderedDict()
 
-    def download(self):
+    def download(self, preview=False):
         doc = self.get_index_doc()
 
         for link in self.get_links(doc):
-            self.download_page(link)
+            if preview:
+                print(link)
+            else:
+                self.download_page(link)
 
         self.write_links_page()
 
