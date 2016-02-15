@@ -92,7 +92,7 @@ class BookScraper:
                 fp.write(html.strip() + '\n')
             fp.write('</ul>')
 
-    def build_ebook(self, output_file, add_page_markers=False):
+    def build_ebook(self, output_file, add_page_markers=True):
         if not self._files:
             self._files = self.import_links_page()
         root_node = self.get_content_tree(self.get_index_doc())

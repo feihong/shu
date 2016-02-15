@@ -1,6 +1,6 @@
 from collections import deque
 from .base import BookScraper, Node
-from .kanunu import KanunuScraper
+from .kanunu import KanunuScraper, KanunuMultiVolumeScraper
 
 
 def print_node(node):
