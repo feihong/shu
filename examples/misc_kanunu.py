@@ -1,7 +1,9 @@
-from shu.kanunu import make_ebook
+from shu import KanunuMultiVolumeScraper, make_ebook
 
 
-if __name__ == '__main__':
+def make_single_volume_ebooks():
+    from shu.kanunu import make_ebook
+
     # More than 1000 pages, 101 chapters.
     make_ebook(
         index_url='http://www.kanunu8.com/files/old/2011/2448.html',
@@ -25,3 +27,23 @@ if __name__ == '__main__':
         author='曹雪芹',
         output_file='hong lou meng.txt',
     )
+
+if __name__ == '__main__':
+    make_single_volume_ebooks()
+
+    class ShiZongZuiScraper(KanunuMultiVolumeScraper):
+        index_url = 'http://www.kanunu8.com/book/4514/index.html'
+        title = '十宗罪'
+        author = '蜘蛛'
+
+    # 60 chapters, almost 300 pages.
+    make_ebook(ShiZongZuiScraper, output_file='shi zong zui.txt')
+
+    class ZangDiMiMaScraper(KanunuMultiVolumeScraper):
+        index_url = 'http://www.kanunu8.com/files/chinese/201103/1856.html'
+        title = '藏地密码全集'
+        author = '何马'
+        index_table_selector = "table[cellpadding='12']"
+
+    # 75 chapters, almost 2300 pages.
+    make_ebook(ZangDiMiMaScraper, output_file='zang di mi ma.txt')
