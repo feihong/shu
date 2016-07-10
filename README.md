@@ -6,8 +6,7 @@ Shu is a tool that scrapes content from Chinese literature websites to assemble 
 
 ```
 pip install virtualenvwrapper
-mkvirtualenv --python=`which python3` shu
-pip install -r requirements.txt
+mkvirtualenv -p python3 shu
 python setup.py develop     # install the shu module but link to this directory
 ```
 

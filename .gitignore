@@ -1,5 +1,5 @@
 __pycache__
 .DS_Store
 cache/*
-*.txt
+books/*.txt
 *.egg-info
