@@ -97,10 +97,14 @@ class BookScraper:
             self._files = self.import_links_page()
         root_node = self.get_content_tree(self.get_index_doc())
 
+        output_file = Path(output_file)
+        if output_file.suffix != '.txt':
+            output_file = output_file.with_suffix('.txt')
+
         if add_page_markers:
             fp = PagedFileWriter(output_file)
         else:
-            fp = open(output_file, 'w')
+            fp = output_file.open('w')
 
         # Write tree to file.
         with fp:

@@ -3,11 +3,11 @@ class PagedFileWriter:
     File-like writer that adds page markers at specific intervals.
 
     """
-    limit = 700
+    limit = 700         # break every 700 characters
 
-    def __init__(self, filename):
+    def __init__(self, output_file):
         self.fp = None
-        self.filename = filename
+        self.output_file = output_file
         self.page = 1
 
     def write(self, text):
@@ -22,7 +22,7 @@ class PagedFileWriter:
             self.page += 1
 
     def __enter__(self):
-        self.fp = open(self.filename, 'w')
+        self.fp = self.output_file.open('w')
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
