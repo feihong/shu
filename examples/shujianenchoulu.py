@@ -1,3 +1,8 @@
+"""
+Explicitly specify the cache root directory.
+
+"""
+
 from shu import KanunuScraper
 
 
@@ -9,6 +14,6 @@ class MyBookScraper(KanunuScraper):
 
 if __name__ == '__main__':
     # Has 40 chapters.
-    scraper = MyBookScraper('cache')
+    scraper = MyBookScraper(cache_root_dir='cache')
     scraper.download()
-    scraper.build_ebook('shu jian en chou lu.txt', add_page_markers=True)
+    scraper.build_ebook('shu jian en chou lu.txt')

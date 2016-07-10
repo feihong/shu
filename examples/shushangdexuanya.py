@@ -1,3 +1,8 @@
+"""
+Custom BookScraper subclass for book on xiaoshuocity.com.
+
+"""
+
 from urlpath import URL
 from shu import BookScraper, Node
 

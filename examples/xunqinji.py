@@ -1,3 +1,8 @@
+"""
+Scrape a book that has multiple volumes.
+
+"""
+
 from shu import KanunuMultiVolumeScraper
 
 
@@ -10,6 +15,6 @@ class MyBookScraper(KanunuMultiVolumeScraper):
 
 if __name__ == '__main__':
     # 290 chapters, oveeer 2500 pages.
-    scraper = MyBookScraper('cache')
+    scraper = MyBookScraper(cache_root_dir='cache')
     scraper.download()
     scraper.build_ebook('xun qin ji.txt')
