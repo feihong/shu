@@ -43,4 +43,4 @@ if __name__ == '__main__':
     # 66 chapters, about 200 pages.
     scraper = MyBookScraper('cache')
     scraper.download()
-    scraper.build_ebook('shu shang de xuan ya.txt', add_page_markers=True)
+    scraper.build_ebook('shu shang de xuan ya')
