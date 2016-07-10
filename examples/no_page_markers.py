@@ -1,3 +1,8 @@
+"""
+Generate the ebook without any page markers.
+
+"""
+
 from shu import KanunuScraper
 
 
@@ -11,4 +16,4 @@ if __name__ == '__main__':
     # Very short, has 11 chapters.
     scraper = MyBookScraper()
     scraper.download()
-    scraper.build_ebook('huangjin shidai.txt', add_page_markers=True)
+    scraper.build_ebook('huangjin shidai.txt', add_page_markers=False)
