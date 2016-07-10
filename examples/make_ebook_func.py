@@ -35,3 +35,12 @@ if __name__ == '__main__':
         index_table_selector = "table[cellpadding='12']",
         output_file='zang di mi ma',
     )
+
+    # 41 chapters, 233 pages.
+    make(
+        index_url = 'http://www.kanunu8.com/book3/8064/index.html',
+        title = '把时间当作朋友',
+        author = '李笑来',
+        # index_table_selector = "table[cellpadding='12']",
+        output_file='ba shijian dangzuo pengyou',
+    )
