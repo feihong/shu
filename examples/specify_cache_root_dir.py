@@ -16,4 +16,4 @@ if __name__ == '__main__':
     # Has 40 chapters.
     scraper = MyBookScraper(cache_root_dir='cache')
     scraper.download()
-    scraper.build_ebook('shu jian en chou lu.txt')
+    scraper.build_ebook('shu jian en chou lu')
