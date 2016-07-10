@@ -1,3 +1,8 @@
+"""
+The most basic example.
+
+"""
+
 from shu import KanunuScraper
 
 
@@ -9,6 +14,6 @@ class MyBookScraper(KanunuScraper):
 
 if __name__ == '__main__':
     # Has 240 chapters.
-    scraper = MyBookScraper('cache')
+    scraper = MyBookScraper()
     scraper.download()
-    scraper.build_ebook('gui chui deng.txt')
+    scraper.build_ebook('gui chui deng')
