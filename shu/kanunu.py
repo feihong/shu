@@ -2,7 +2,7 @@ from urlpath import URL
 from .base import BookScraper, Node
 
 
-def make_ebook(index_url, title, author, output_file, add_page_markers=True):
+def make_ebook(index_url, title, author, output_file, **kwargs):
     # Because of how scoping works in Python, you need to use different variable
     # names. See bit.ly/1Th5SRl.
     args = (index_url, title, author)
@@ -14,7 +14,7 @@ def make_ebook(index_url, title, author, output_file, add_page_markers=True):
 
     scraper = MyBookScraper()
     scraper.download()
-    scraper.build_ebook(output_file, add_page_markers=add_page_markers)
+    scraper.build_ebook(output_file, **kwargs)
 
 
 class KanunuScraper(BookScraper):

@@ -1,6 +1,8 @@
 import xml.etree
 from collections import OrderedDict, deque
 from pathlib import Path
+import subprocess
+
 import requests
 import lxml.html
 import html5lib
@@ -63,17 +65,18 @@ class BookScraper:
         """
         Download contents of the given URL.
         """
-        response = self._session.get(url)
         # Try to use the existing filename for this URL.
         if filename is None:
             filename = self._files.get(url)
         # If that doesn't work, just use the next number.
         if filename is None:
-            filename = '%d.html' % len(self._files)
+            filename = f'{len(self._files)}.html'
 
         output_path = self._cache_dir / filename
-        print('Downloading %s to %s' % (url, output_path))
-        output_path.write_bytes(response.content)
+        if not output_path.exists():
+            print('Downloading %s to %s' % (url, output_path))
+            response = self._session.get(url)
+            output_path.write_bytes(response.content)
 
         if not filename in self._files:
             self._files[url] = filename
@@ -92,7 +95,7 @@ class BookScraper:
                 fp.write(html.strip() + '\n')
             fp.write('</ul>')
 
-    def build_ebook(self, output_file, add_page_markers=True):
+    def build_ebook(self, output_file, add_page_markers=True, formats=[]):
         if not self._files:
             self._files = self.import_links_page()
         root_node = self.get_content_tree(self.get_index_doc())
@@ -106,10 +109,15 @@ class BookScraper:
         else:
             fp = output_file.open('w')
 
+        self._write_tree_to_file(fp, root_node)
+
+        self._write_formats(output_file, formats, root_node)
+
+    def _write_tree_to_file(self, fp, root_node):
         # Write tree to file.
         with fp:
-            fp.write('# %s\n\n' % self.title)
-            fp.write('作者：%s\n\n' % self.author)
+            fp.write(f'# {self.title}\n\n')
+            fp.write(f'作者：{self.author}\n\n')
 
             stack = deque()
             stack.append((1, root_node))
@@ -118,7 +126,7 @@ class BookScraper:
                 level, node = stack.pop()
                 if node.title != 'root':
                     hashes = '#' * level
-                    fp.write('%s %s\n\n' % (hashes, node.title))
+                    fp.write(f'{hashes} {node.title}\n\n')
                     if node.content:
                         # Strip any leading and trailing newlines.
                         fp.write(node.content.strip('\n') + '\n\n')
@@ -126,6 +134,23 @@ class BookScraper:
                 for child in reversed(node.children):
                     stack.append((level+1, child))
 
+    def _write_formats(self, output_file, formats, root_node):
+        if len(formats):
+            markdown_file = f'{self._cache_dir}/book.md'
+            with open(markdown_file, 'w') as fp:
+                self._write_tree_to_file(fp, root_node)
+
+        for format_ in formats:
+            output_path = output_file.with_suffix(format_)
+            cmd = [
+                'ebook-convert',
+                markdown_file,
+                output_path,
+                '--authors', self.author,
+                '--title', self.title,
+                '--chapter', "//*[name()='h2' or name()='h3']"
+            ]
+            subprocess.call(cmd)
 
     def import_links_page(self):
         doc = get_doc_from_file(self._cache_dir / 'links.html')

@@ -15,7 +15,7 @@ def print_node(node):
             stack.append((level+1, child))
 
 
-def make_ebook(scraper_class, output_file, add_page_markers=True):
+def make_ebook(scraper_class, output_file, **kwargs):
     scraper = scraper_class()
     scraper.download()
-    scraper.build_ebook(output_file, add_page_markers=add_page_markers)
+    scraper.build_ebook(output_file, **kwargs)
