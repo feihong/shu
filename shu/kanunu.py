@@ -7,12 +7,7 @@ def make_ebook(index_url, title, author, output_file, **kwargs):
     # names. See bit.ly/1Th5SRl.
     args = (index_url, title, author)
 
-    class MyBookScraper(KanunuScraper):
-        index_url = args[0]
-        title = args[1]
-        author = args[2]
-
-    scraper = MyBookScraper()
+    scraper = KanunuScraper(index_url=index_url, title=title, author=author)
     scraper.download()
     scraper.build_ebook(output_file, **kwargs)
 
@@ -21,8 +16,8 @@ class KanunuScraper(BookScraper):
     # CSS selector for table that contains all the links.
     index_table_selector = 'table[cellpadding="8"]'
 
-    def __init__(self, cache_root_dir=None):
-        super(KanunuScraper, self).__init__(cache_root_dir)
+    def __init__(self, **kwargs):
+        super(KanunuScraper, self).__init__(**kwargs)
         self.base_url = URL(self.index_url).parent
 
     def get_title_and_links(self, doc):

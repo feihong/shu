@@ -11,11 +11,11 @@ from .writer import PagedFileWriter
 
 
 class BookScraper:
-    title = 'TITLE'
-    author = 'AUTHOR'
-    index_url = ''
+    def __init__(self, index_url='', title='TITLE', author='AUTHOR', cache_root_dir=None):
+        self.index_url = getattr(self, 'index_url', None) or index_url
+        self.title = getattr(self, title, None) or title
+        self.author = getattr(self, 'author', None) or author
 
-    def __init__(self, cache_root_dir=None):
         if cache_root_dir is None:
             cache_root_dir = get_default_cache_root_dir()
         self._cache_dir = Path(cache_root_dir) / self.title
@@ -95,23 +95,17 @@ class BookScraper:
                 fp.write(html.strip() + '\n')
             fp.write('</ul>')
 
-    def build_ebook(self, output_file, add_page_markers=True, formats=[]):
+    def build_ebook(self, output_file, add_page_markers=True, formats=['.txt']):
         if not self._files:
             self._files = self.import_links_page()
         root_node = self.get_content_tree(self.get_index_doc())
 
-        output_file = Path(output_file)
-        if output_file.suffix != '.txt':
-            output_file = output_file.with_suffix('.txt')
+        if '.txt' in formats:
+            formats.remove('.txt')
+            self._write_txt_file(output_file, root_node, add_page_markers)
 
-        if add_page_markers:
-            fp = PagedFileWriter(output_file)
-        else:
-            fp = output_file.open('w')
-
-        self._write_tree_to_file(fp, root_node)
-
-        self._write_formats(output_file, formats, root_node)
+        if len(formats) > 0:
+            self._write_other_formats(output_file, formats, root_node)
 
     def _write_tree_to_file(self, fp, root_node):
         # Write tree to file.
@@ -134,14 +128,24 @@ class BookScraper:
                 for child in reversed(node.children):
                     stack.append((level+1, child))
 
-    def _write_formats(self, output_file, formats, root_node):
-        if len(formats):
-            markdown_file = f'{self._cache_dir}/book.md'
-            with open(markdown_file, 'w') as fp:
-                self._write_tree_to_file(fp, root_node)
+    def _write_txt_file(self, output_file, root_node, add_page_markers):
+        output_path = Path(output_file).with_suffix('.txt')
+
+        if add_page_markers:
+            fp = PagedFileWriter(output_path)
+        else:
+            fp = output_path.open('w')
+
+        self._write_tree_to_file(fp, root_node)
+
+    def _write_other_formats(self, output_file, formats, root_node):
+        # Generate markdown file that you can convert to other formats.
+        markdown_file = f'{self._cache_dir}/book.md'
+        with open(markdown_file, 'w') as fp:
+            self._write_tree_to_file(fp, root_node)
 
         for format_ in formats:
-            output_path = output_file.with_suffix(format_)
+            output_path = Path(output_file).with_suffix(format_)
             cmd = [
                 'ebook-convert',
                 markdown_file,
