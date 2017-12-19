@@ -2,6 +2,7 @@ import xml.etree
 from collections import OrderedDict, deque
 from pathlib import Path
 import subprocess
+import shutil
 
 import requests
 import lxml.html
@@ -100,6 +101,8 @@ class BookScraper:
             self._files = self.import_links_page()
         root_node = self.get_content_tree(self.get_index_doc())
 
+        output_file = Path(output_file)
+
         if '.txt' in formats:
             formats.remove('.txt')
             self._write_txt_file(output_file, root_node, add_page_markers)
@@ -129,7 +132,7 @@ class BookScraper:
                     stack.append((level+1, child))
 
     def _write_txt_file(self, output_file, root_node, add_page_markers):
-        output_path = Path(output_file).with_suffix('.txt')
+        output_path = output_file.with_suffix('.txt')
 
         if add_page_markers:
             fp = PagedFileWriter(output_path)
@@ -144,8 +147,12 @@ class BookScraper:
         with open(markdown_file, 'w') as fp:
             self._write_tree_to_file(fp, root_node)
 
+        if '.md' in formats:
+            formats.remove('.md')
+            shutil.copy(markdown_file, output_file.with_suffix('.md'))
+
         for format_ in formats:
-            output_path = Path(output_file).with_suffix(format_)
+            output_path = output_file.with_suffix(format_)
             cmd = [
                 'ebook-convert',
                 markdown_file,
