@@ -10,6 +10,7 @@ def make_ebook(index_url, title, author, output_file, **kwargs):
     scraper = KanunuScraper(index_url=index_url, title=title, author=author)
     scraper.download()
     scraper.build_ebook(output_file, **kwargs)
+    return scraper
 
 
 class KanunuScraper(BookScraper):

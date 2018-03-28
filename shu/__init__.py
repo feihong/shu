@@ -19,3 +19,4 @@ def make_ebook(scraper_class, index_url=None, title=None, author=None, **kwargs)
     scraper = scraper_class(index_url=index_url, title=title, author=author)
     scraper.download()
     scraper.build_ebook(**kwargs)
+    return scraper
