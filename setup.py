@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='shu',
-    version='0.3.0',
+    version='1.0.0',
     description='Library for making Chinese ebooks',
     url='http://github.com/feihong/shu',
     license='MIT',
