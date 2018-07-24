@@ -8,6 +8,8 @@ def make_ebook(index_url, title, author, output_file, **kwargs):
     args = (index_url, title, author)
 
     scraper = KanunuScraper(index_url=index_url, title=title, author=author)
+    if 'index_table_selector' in kwargs:
+        scraper.index_table_selector = kwargs.pop('index_table_selector')
     scraper.download()
     scraper.build_ebook(output_file, **kwargs)
     return scraper
