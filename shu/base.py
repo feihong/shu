@@ -14,7 +14,7 @@ from .writer import PagedFileWriter
 class BookScraper:
     def __init__(self, index_url='', title='TITLE', author='AUTHOR', cache_root_dir=None):
         self.index_url = getattr(self, 'index_url', None) or index_url
-        self.title = getattr(self, title, None) or title
+        self.title = getattr(self, 'title', None) or title
         self.author = getattr(self, 'author', None) or author
 
         if cache_root_dir is None:
